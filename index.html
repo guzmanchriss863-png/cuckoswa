@@ -3,523 +3,503 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Archivo · Catálogo de descargas</title>
+<meta name="description" content="Cuckoswa Premium - 18+ Uncensored Archive">
+<title>Cuckoswa 18+ · Premium Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-dark: #0d1117;
-    --bg-panel: #161b22;
-    --paper: #f4f1e1;
-    --paper-line: rgba(0, 0, 0, 0.08);
-    --text-dark: #1f2328;
-    --text-mute: #59636e;
-    --stamp-red: #d1242f;
-    --brass: #d2a850;
-    --teal: #238636;
-    --focus: #d2a850;
-    --border-subtle: rgba(255, 255, 255, 0.1);
+    --bg-base: #050505;
+    --bg-panel: #111111;
+    --primary: #ff0055; /* Rosa Neón / Magenta +18 */
+    --primary-dim: rgba(255, 0, 85, 0.15);
+    --primary-hover: #ff3377;
+    --text-main: #f5f5f5;
+    --text-muted: #737373;
+    --accent-gold: #f2a900;
+    --border-light: #222222;
+    --glass-blur: blur(20px);
+    --transition: all 0.3s ease;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  body {
+    background-color: var(--bg-base);
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(255, 0, 85, 0.08), transparent 50%),
+      linear-gradient(to bottom, transparent, #050505 80%);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  body {
-    background-color: var(--bg-dark);
-    background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 40px 40px;
-    color: var(--paper);
-    font-family: 'IBM Plex Sans', sans-serif;
-    min-height: 100vh;
-    padding: 40px 20px 80px;
-  }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-base); }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
   a { color: inherit; text-decoration: none; }
-
-  .wrap { max-width: 1080px; margin: 0 auto; }
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 24px;
-    padding-bottom: 24px;
-    margin-bottom: 32px;
-    border-bottom: 1px solid var(--border-subtle);
+  
+  /* =========================================
+     PANTALLA DE CARGA (18+ BOOT)
+     ========================================= */
+  #boot-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: #000; z-index: 10000;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
   }
 
-  .tab {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--brass);
-    color: var(--bg-dark);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    padding: 6px 12px;
-    border-radius: 4px;
-    margin-bottom: 16px;
-    box-shadow: 0 0 15px rgba(210, 168, 80, 0.2);
+  .loader-logo {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700;
+    color: #ffffff; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+    animation: pulse 1.5s infinite alternate;
+  }
+
+  .loader-logo span { color: var(--primary); }
+
+  .loader-text {
+    font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--text-muted);
+    letter-spacing: 1px; min-height: 24px; text-align: center; text-transform: uppercase;
+    animation: fadeInOut 1s infinite alternate;
+  }
+
+  .warning-text {
+    margin-top: 30px; font-size: 0.8rem; color: #555; max-width: 400px; text-align: center; line-height: 1.5;
+  }
+
+  @keyframes pulse { 0% { text-shadow: 0 0 10px rgba(255,0,85,0); } 100% { text-shadow: 0 0 30px rgba(255,0,85,0.6); } }
+  @keyframes fadeInOut { from { opacity: 0.3; } to { opacity: 1; } }
+
+  /* =========================================
+     CONTENEDOR PRINCIPAL
+     ========================================= */
+  .wrap {
+    max-width: 1300px; margin: 0 auto; padding: 40px 24px 80px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 1s ease 0.2s, transform 1s ease 0.2s;
+  }
+
+  body.loaded .wrap { opacity: 1; transform: translateY(0); }
+
+  /* =========================================
+     HEADER & SEARCH
+     ========================================= */
+  header {
+    display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap;
+    gap: 24px; padding-bottom: 30px; margin-bottom: 40px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .system-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--primary-dim); color: var(--primary);
+    font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 4px; border: 1px solid rgba(255, 0, 85, 0.3);
+    margin-bottom: 16px; letter-spacing: 1px;
   }
 
   h1 {
-    font-family: 'Special Elite', cursive;
-    font-weight: 400;
-    font-size: clamp(2.2rem, 6vw, 3.2rem);
-    letter-spacing: -0.02em;
-    color: #ffffff;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: clamp(2.5rem, 5vw, 4rem);
+    text-transform: uppercase; color: #ffffff; line-height: 1.1;
   }
+  h1 span { color: var(--primary); }
 
   header p {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.5);
-    margin-top: 8px;
+    font-size: 1rem; color: var(--text-muted); margin-top: 10px; font-weight: 500;
   }
 
   .search-box {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(22, 27, 34, 0.8);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    padding: 12px 18px;
-    min-width: 280px;
-    transition: all 0.3s ease;
+    display: flex; align-items: center; gap: 12px;
+    background: #151515; border: 1px solid var(--border-light); border-radius: 8px;
+    padding: 16px 24px; min-width: 350px; transition: var(--transition);
   }
 
   .search-box:focus-within {
-    border-color: var(--brass);
-    box-shadow: 0 0 0 3px rgba(210, 168, 80, 0.15);
-    background: var(--bg-panel);
+    border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 0, 85, 0.2);
+    background: #000;
   }
 
-  .search-box svg { flex-shrink: 0; color: var(--brass); opacity: 0.8; }
+  .search-box svg { color: var(--text-muted); transition: var(--transition); }
+  .search-box:focus-within svg { color: var(--primary); }
+  
   .search-box input {
-    background: none; border: none; outline: none;
-    color: #fff; font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.9rem; width: 100%;
+    background: none; border: none; outline: none; color: #fff;
+    font-family: 'Inter', sans-serif; font-size: 1rem; width: 100%;
   }
-  .search-box input::placeholder { color: rgba(255,255,255,0.3); }
-
-  .filters {
-    display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px;
-  }
-
-  .filter-btn {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
-    font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
-    color: rgba(255,255,255,0.6); padding: 8px 20px; border-radius: 999px;
-    cursor: pointer; transition: all 0.2s ease;
-  }
-  .filter-btn:hover { border-color: rgba(255,255,255,0.3); color: #fff; background: rgba(255,255,255,0.08); }
-  .filter-btn.active { background: #fff; border-color: #fff; color: var(--bg-dark); box-shadow: 0 4px 12px rgba(255,255,255,0.15); }
+  .search-box input::placeholder { color: #555; }
 
   /* =========================================
-     SISTEMA DE CARPETAS (ACORDEÓN)
+     FILTROS
      ========================================= */
-  .folder-container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+
+  .filter-btn {
+    font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600; text-transform: uppercase;
+    background: #111; border: 1px solid var(--border-light);
+    color: var(--text-muted); padding: 12px 28px; border-radius: 6px;
+    cursor: pointer; transition: var(--transition);
   }
 
+  .filter-btn:hover { color: #fff; border-color: #444; background: #1a1a1a; }
+  .filter-btn.active {
+    background: var(--primary); border-color: var(--primary); color: #fff;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+  }
+
+  /* =========================================
+     CARPETAS / CATEGORÍAS
+     ========================================= */
+  .folder-container { display: flex; flex-direction: column; gap: 30px; }
+
   .folder {
-    background: var(--bg-panel);
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    overflow: hidden;
+    background: transparent;
+    transition: var(--transition);
   }
 
   .folder-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    cursor: pointer;
-    background: rgba(255,255,255,0.02);
-    transition: background 0.2s ease;
-    user-select: none;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 15px 0; cursor: pointer; border-bottom: 2px solid var(--border-light);
+    margin-bottom: 20px; transition: var(--transition); user-select: none;
   }
 
-  .folder-header:hover { background: rgba(255,255,255,0.05); }
+  .folder-header:hover { border-color: var(--primary); }
+  .folder.open .folder-header { border-color: var(--primary); }
 
-  .folder-title-group {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .folder-title-group svg { color: var(--brass); }
-
-  .folder-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: #fff;
-  }
+  .folder-title-group { display: flex; align-items: center; gap: 12px; }
+  .folder-title-group svg { color: var(--primary); width: 28px; height: 28px; }
+  .folder-title { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-weight: 500; color: #fff; text-transform: uppercase; }
 
   .folder-meta {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--text-mute);
+    display: flex; align-items: center; gap: 15px; font-weight: 600;
+    font-size: 0.9rem; color: var(--text-muted);
   }
 
-  .chevron {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .folder.open .chevron { transform: rotate(180deg); }
-  .folder.open .folder-header { border-bottom: 1px solid var(--border-subtle); background: rgba(210, 168, 80, 0.05); }
+  .chevron { transition: transform 0.4s ease; }
+  .folder.open .chevron { transform: rotate(180deg); color: var(--primary); }
 
-  /* Truco CSS para animar la altura del acordeón suavemente */
   .folder-content-wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease;
   }
-
   .folder.open .folder-content-wrapper { grid-template-rows: 1fr; }
+  .folder-content-inner { overflow: hidden; }
 
-  .folder-content-inner {
-    overflow: hidden;
-  }
-
-  /* Grid interna de las tarjetas */
   .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
-    padding: 24px 20px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px; padding-bottom: 20px;
   }
 
   /* =========================================
      TARJETAS (CARDS)
      ========================================= */
   .card {
-    position: relative; background: var(--paper); color: var(--text-dark);
-    border-radius: 6px; padding: 24px 20px 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 12px 24px rgba(0,0,0,0.2), inset 0 0 60px rgba(0,0,0,0.03);
-    background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 27px, var(--paper-line) 28px);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-    display: flex; flex-direction: column;
+    position: relative; background: var(--bg-panel);
+    border: 1px solid var(--border-light); border-radius: 8px; padding: 24px;
+    display: flex; flex-direction: column; transition: var(--transition);
   }
-  .card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 8px 15px rgba(0,0,0,0.1), 0 24px 40px rgba(0,0,0,0.4), inset 0 0 60px rgba(0,0,0,0.03); z-index: 2; }
 
+  .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
+  .stamp-container { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
+  
   .stamp {
-    position: absolute; top: 12px; right: -8px; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em;
-    color: var(--stamp-red); border: 2px dashed var(--stamp-red); border-radius: 4px; padding: 3px 8px; transform: rotate(12deg); opacity: 0.7; mix-blend-mode: multiply; pointer-events: none;
+    font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase;
   }
-  .stamp.doc { color: var(--teal); border-color: var(--teal); transform: rotate(-8deg); }
+  .stamp.hd { background: var(--accent-gold); color: #000; }
+  .stamp.adult { background: var(--primary); color: #fff; }
 
-  .card h2 { font-family: 'IBM Plex Mono', monospace; font-size: 1.1rem; font-weight: 600; line-height: 1.3; padding-right: 50px; margin-bottom: 12px; word-break: break-word; color: #111; }
-  .meta { display: flex; gap: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-mute); margin-bottom: 14px; font-weight: 500; }
-  .meta span { display: flex; align-items: center; gap: 4px; }
-  .meta svg { width: 14px; height: 14px; opacity: 0.7; }
-  .desc { font-size: 0.85rem; line-height: 1.6; color: #333; margin-bottom: 20px; flex-grow: 1; }
-
-  .preview { margin-bottom: 16px; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.1); }
-  .thumb { width: 100%; height: 140px; object-fit: cover; background: #000; display: block; transition: transform 0.3s ease; }
-  .card:hover .thumb { transform: scale(1.03); }
-
-  .btn-download {
-    display: inline-flex; justify-content: center; align-items: center; gap: 8px; background: var(--bg-dark); color: var(--paper); font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600; padding: 10px 16px; border-radius: 6px; transition: all 0.2s ease; width: 100%; border: 1px solid transparent;
+  .card h2 {
+    font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; line-height: 1.4;
+    margin-bottom: 12px; padding-right: 70px; color: #fff;
   }
-  .btn-download:hover { background: var(--brass); color: var(--bg-dark); box-shadow: 0 4px 12px rgba(210, 168, 80, 0.3); }
 
-  .empty { text-align: center; padding: 80px 20px; color: rgba(255,255,255,0.4); font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); border-radius: 8px; }
+  .card h2:hover { color: var(--primary); cursor: pointer; }
 
-  footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border-subtle); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: rgba(255,255,255,0.4); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-  footer span:last-child { background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 4px; }
+  .meta {
+    display: flex; gap: 15px; font-size: 0.8rem; font-weight: 500;
+    color: var(--text-muted); margin-bottom: 16px;
+  }
+  .meta span { display: flex; align-items: center; gap: 6px; }
+  .meta svg { width: 14px; height: 14px; color: var(--text-muted); }
+
+  .desc { font-size: 0.95rem; line-height: 1.5; color: #999; margin-bottom: 24px; flex-grow: 1; }
+
+  /* Botones de acción */
+  .card-actions { display: flex; gap: 10px; margin-top: auto; }
+
+  .btn {
+    flex: 1; display: inline-flex; justify-content: center; align-items: center; gap: 8px;
+    font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+    padding: 14px; border-radius: 4px; cursor: pointer; transition: var(--transition);
+    border: none;
+  }
+
+  .btn-play {
+    background: var(--primary); color: #fff;
+  }
+  .btn-play:hover { background: var(--primary-hover); box-shadow: 0 5px 15px rgba(255,0,85,0.4); }
+
+  .btn-down {
+    background: #222; color: #fff;
+  }
+  .btn-down:hover { background: #333; }
+
+  /* =========================================
+     MODAL DEL REPRODUCTOR
+     ========================================= */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(5px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999; opacity: 0; visibility: hidden; transition: var(--transition);
+  }
+  
+  .modal-overlay.active { opacity: 1; visibility: visible; }
+
+  .modal-content {
+    position: relative; width: 95%; max-width: 1200px; aspect-ratio: 16/9;
+    background: #000; border: 2px solid var(--primary); border-radius: 8px;
+    box-shadow: 0 0 50px rgba(255, 0, 85, 0.2); transform: scale(0.95); transition: var(--transition);
+    overflow: hidden;
+  }
+
+  .modal-overlay.active .modal-content { transform: scale(1); }
+
+  .modal-close {
+    position: absolute; top: -50px; right: 0; color: #fff; background: none;
+    border: none; font-size: 3rem; cursor: pointer; transition: var(--transition);
+    line-height: 1; opacity: 0.7;
+  }
+  .modal-close:hover { opacity: 1; color: var(--primary); }
+
+  iframe.video-frame { width: 100%; height: 100%; border: none; }
+
+  /* =========================================
+     ESTADOS VACÍOS & FOOTER
+     ========================================= */
+  .empty {
+    text-align: center; padding: 100px 20px; color: var(--text-muted);
+    font-size: 1.1rem; background: var(--bg-panel); border: 1px dashed #333; border-radius: 8px;
+  }
+
+  footer {
+    margin-top: 80px; padding-top: 30px; border-top: 1px solid var(--border-light);
+    font-size: 0.9rem; color: #666; font-weight: 500;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  }
+  
+  .footer-badge {
+    display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-transform: uppercase;
+    color: #444;
+  }
 </style>
 </head>
 <body>
 
+<div id="boot-screen">
+  <div class="loader-logo">🔞 CUCKOSWA <span>PREMIUM</span></div>
+  <div class="loader-text" id="loader-text">Verificando acceso para adultos...</div>
+  <div class="warning-text">
+    Este sitio contiene material explícito solo para adultos. Al ingresar, confirmas que tienes al menos 18 años de edad y consientes ver este tipo de contenido.
+  </div>
+</div>
+
 <div class="wrap">
   <header>
     <div>
-      <span class="tab">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-        CUCKOSWA
+      <span class="system-badge">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        CONTENIDO EXPLÍCITO 18+
       </span>
-      <h1>Archivo Central</h1>
-      <p id="count-label">— archivos disponibles</p>
+      <h1>Cuckoswa <span>Archive</span></h1>
+      <p id="count-label">Cargando base de datos sin censura...</p>
     </div>
     <div class="search-box">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <input id="search" type="text" placeholder="Buscar por nombre, descripción..." aria-label="Buscar archivo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input id="search" type="text" placeholder="Buscar actrices, parodias, estudios..." autocomplete="off">
     </div>
   </header>
 
   <div class="filters" id="filters"></div>
-
   <div class="folder-container" id="folders-container"></div>
 
   <div class="empty" id="empty" hidden>
-    <svg width="40" height="40" style="margin-bottom:12px; opacity:0.5;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="9" y1="14" x2="15" y2="14"></line></svg>
-    <br>No hay archivos que coincidan con tu búsqueda.
+    <svg width="48" height="48" style="margin-bottom:16px; opacity:0.2;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    <br>No se encontraron videos con ese término.
   </div>
 
   <footer>
-    <span>Última actualización: <span id="updated" style="color:var(--brass);"></span></span>
-    <span>Catálogo estático · Seguro & Privado</span>
+    <span>© 2026 Cuckoswa Network. Todos los derechos reservados.</span>
+    <div class="footer-badge">
+      100% UNCENSORED
+    </div>
   </footer>
+</div>
+
+<div class="modal-overlay" id="video-modal">
+  <div class="modal-content">
+    <button class="modal-close" id="close-modal">&times;</button>
+    <iframe class="video-frame" id="video-frame" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  </div>
 </div>
 
 <script>
   /* =====================================================================
-     CÓMO USAR LAS CARPETAS:
-     Solo tienes que añadir la propiedad 'folder: "Nombre de tu Carpeta"' 
-     a cada archivo. El sistema se encarga de agruparlos visualmente.
+     ANIMACIÓN DE ENTRADA (18+ BOOT)
      ===================================================================== */
+  window.addEventListener('load', () => {
+    const loaderText = document.getElementById('loader-text');
+    const messages = ["Verificando edad...", "Estableciendo conexión encriptada...", "Acceso concedido."];
+    let msgIndex = 0;
 
+    const msgInterval = setInterval(() => {
+      if (msgIndex < messages.length) {
+        loaderText.textContent = messages[msgIndex];
+        msgIndex++;
+      } else {
+        clearInterval(msgInterval);
+      }
+    }, 900);
+
+    setTimeout(() => {
+      const bootScreen = document.getElementById('boot-screen');
+      bootScreen.style.opacity = '0';
+      bootScreen.style.visibility = 'hidden';
+      document.body.classList.add('loaded');
+      setTimeout(() => bootScreen.remove(), 800);
+    }, 3500);
+  });
+
+  /* =====================================================================
+     DATOS DEL SISTEMA
+     ===================================================================== */
   const FILES = [
-    {
-      name: "[Daemon Hentai] GeeWhy Collection [Akira].mp4",
-      folder: "Colección GeeWhy",
-      category: "video",
-      size: "209 MB",
-      date: "2026-07-07",
-      desc: "Colección de videos clasificados de GeeWhy. Material restringido.",
-      url: "https://drive.google.com/uc?export=download&id=1hYpMZsdORtzPZ98b76t_zETTxHFucgWJ"
-    },
-    {
-      name: "[Totonito] Alya X Yuki Parte 1.mp4",
-      folder: "Tokidoki Bosotto Russian",
-      category: "video",
-      size: "341 MB",
-      date: "2026-07-07",
-      desc: "Video de la primera parte de Alya X Yuki. Contenido para adultos.",
-      url: "https://drive.google.com/uc?export=download&id=1GSQvkZ8Zzg7PMz1aPC0-II1TFZezJ-yd"
-    },
-    {
-      name: "[Totonito] Alya X Yuki Parte 2.mp4",
-      folder: "Tokidoki Bosotto Russian", 
-      category: "video",
-      size: "212 MB",
-      date: "2026-07-07",
-      desc: "Video de la segunda parte de Alya X Yuki. Contenido para adultos.",
-      url: "https://drive.google.com/uc?export=download&id=1GrHW5iw0cmKoJGRjyWJzvdKqyOEHjy4-"
-    },
-    {
-      name: "[SemiDraws] Anal Slayer Shinobu X Douma.mp4",
-      folder: "Kimetsu no Yaiba",
-      category: "video",
-      size: "42 MB",
-      date: "2026-07-07",
-      desc: "Video de SemiDraws 'Anal Slayer-Shinobu X Douma'. Contenido para adultos.",
-      url: "https://drive.google.com/uc?export=download&id=1wBgwEtk4NMIS0Pd6ZUy4E5iGdDmKOVSF"
-    },
-    {
-      name: "[SemiDraws] Anal-Slayer Tiempo de Chicas (Mitsuri X Nezuko).mp4",
-      folder: "Kimetsu no Yaiba",
-      category: "video",
-      size: "53 MB",
-      date: "2026-07-08",
-      desc: "Video de SemiDraws 'Anal-Slayer Tiempo de Chicas (Mitsuri X Nezuko)'. Contenido para adultos.",
-      url: "https://drive.google.com/uc?export=download&id=1RPtJfrYV_5yHheJQJLC2uE57KSfyhitK"
-    },
-    {
-      name: "[GREATM8] MEI's Footjob Extravaganza.mp4",
-      folder: "My hero Academia",
-      category: "video",
-      size: "50 MB",
-      date: "2026-07-08",
-      desc: "Video de GREATM8 'MEI's Footjob Extravaganza'",
-      url: "https://drive.google.com/uc?export=download&id=1RbgUM7XBmg08ccgHZFfXbDz2UqKNgE-l"
-    },
-    {
-      name: "[GREATM8] Demon Slayer Nezuko y Inosuke en las aguas termales.mp4",
-      folder: "Kimetsu no Yaiba",
-      category: "video",
-      size: "47 MB",
-      date: "2026-07-08",
-      desc: "Video de GREATM8. Inosuke agarra desprevenida a Nezuko en las aguas termales.",
-      url: "https://drive.google.com/uc?export=download&id=1sgBovXmtRw6RaO8arUygqqnNSAAvfF0i"
-    },
-    {
-      name: "[GREATM8] Version Completa de el Video de Ragdoll x Deku.mp4",
-      folder: "My hero Academia",
-      category: "video",
-      size: "135 MB",
-      date: "2026-07-08",
-      desc: "La Version completa de el video de Ragdoll y Deku sin anuncios y para descarga directa",
-      url: "https://drive.google.com/uc?export=download&id=18zt7sSr_8pUahaF_eqwk__GRtv_GSRsA"
-    },
-    {
-      name: "[GREATM8] Nezuko y Zenitsu Doblaje al español.mp4",
-      folder: "Kimetsu no Yaiba",
-      category: "video",
-      size: "92 MB",
-      date: "2026-07-08",
-      desc: "Un clasico de GREATM8. Video de Nezuko x Zenitsu doblado al español",
-      url: "https://drive.google.com/uc?export=download&id=1rkmMxxu5Xb6bG1oZaMxiDkRia0EMv7CG"
-    }
+    { name: "[Daemon Hentai] GeeWhy Collection [Akira].mp4", folder: "Colección GeeWhy", category: "video", size: "209 MB", date: "2026-07-07", desc: "Colección de videos clasificados de GeeWhy. Material restringido.", url: "https://drive.google.com/uc?export=download&id=1hYpMZsdORtzPZ98b76t_zETTxHFucgWJ" },
+    { name: "[Totonito] Alya X Yuki Parte 1.mp4", folder: "Tokidoki Bosotto Russian", category: "video", size: "341 MB", date: "2026-07-07", desc: "Video de la primera parte de Alya X Yuki. Contenido para adultos.", url: "https://drive.google.com/uc?export=download&id=1GSQvkZ8Zzg7PMz1aPC0-II1TFZezJ-yd" },
+    { name: "[Totonito] Alya X Yuki Parte 2.mp4", folder: "Tokidoki Bosotto Russian", category: "video", size: "212 MB", date: "2026-07-07", desc: "Video de la segunda parte de Alya X Yuki. Contenido para adultos.", url: "https://drive.google.com/uc?export=download&id=1GrHW5iw0cmKoJGRjyWJzvdKqyOEHjy4-" },
+    { name: "[SemiDraws] Anal Slayer Shinobu X Douma.mp4", folder: "Kimetsu no Yaiba", category: "video", size: "42 MB", date: "2026-07-07", desc: "Video de SemiDraws 'Anal Slayer-Shinobu X Douma'. Contenido explícito.", url: "https://drive.google.com/uc?export=download&id=1wBgwEtk4NMIS0Pd6ZUy4E5iGdDmKOVSF" },
+    { name: "[SemiDraws] Anal-Slayer Tiempo de Chicas (Mitsuri X Nezuko).mp4", folder: "Kimetsu no Yaiba", category: "video", size: "53 MB", date: "2026-07-08", desc: "Video de SemiDraws 'Anal-Slayer Tiempo de Chicas (Mitsuri X Nezuko)'.", url: "https://drive.google.com/uc?export=download&id=1RPtJfrYV_5yHheJQJLC2uE57KSfyhitK" },
+    { name: "[GREATM8] MEI's Footjob Extravaganza.mp4", folder: "My hero Academia", category: "video", size: "50 MB", date: "2026-07-08", desc: "Video de GREATM8 'MEI's Footjob Extravaganza'. Material sin censura.", url: "https://drive.google.com/uc?export=download&id=1RbgUM7XBmg08ccgHZFfXbDz2UqKNgE-l" },
+    { name: "[GREATM8] Demon Slayer Nezuko y Inosuke en las aguas termales.mp4", folder: "Kimetsu no Yaiba", category: "video", size: "47 MB", date: "2026-07-08", desc: "Video de GREATM8. Inosuke agarra desprevenida a Nezuko en las aguas termales.", url: "https://drive.google.com/uc?export=download&id=1sgBovXmtRw6RaO8arUygqqnNSAAvfF0i" },
+    { name: "[GREATM8] Version Completa de el Video de Ragdoll x Deku.mp4", folder: "My hero Academia", category: "video", size: "135 MB", date: "2026-07-08", desc: "La Version completa del video de Ragdoll y Deku sin anuncios.", url: "https://drive.google.com/uc?export=download&id=18zt7sSr_8pUahaF_eqwk__GRtv_GSRsA" },
+    { name: "[GREATM8] Nezuko y Zenitsu Doblaje al español.mp4", folder: "Kimetsu no Yaiba", category: "video", size: "92 MB", date: "2026-07-08", desc: "Un clasico de GREATM8. Video de Nezuko x Zenitsu doblado al español", url: "https://drive.google.com/uc?export=download&id=1rkmMxxu5Xb6bG1oZaMxiDkRia0EMv7CG" },
+    { name: "[GREATM8] Hermanos Kamado.mp4", folder: "Kimetsu no Yaiba", category: "video", size: "31 MB", date: "2026-07-11", desc: "Un Video corto de los hermanos Kamado hecho por GREATM8.", url: "https://drive.google.com/uc?export=download&id=1ZH2_n9zlAA-lVWavcKVoW-4bfYE27fue" },
+    { name: "[Theobrobine] Merry Christmas 2025 Uzaki-Chan.mp4", folder: "Uzaki-chan wa Asobitai!", category: "video", size: "18 MB", date: "2026-07-11", desc: "Video de Theobrobine 'Merry Christmas 2025 Uzaki-Chan'.", url: "https://drive.google.com/uc?export=download&id=1t8xt70Wg4_6XlFSV-UtYa75sRvZ3ZkyT" },
+    { name: "[Maplestar] The Alya & Kuze Animation.mp4", folder: "Tokidoki Bosotto Russian", category: "video", size: "58 MB", date: "2026-07-11", desc: "La animacion de Alya y Kuze por Maplestar. Contenido explícito.", url: "https://drive.google.com/uc?export=download&id=1LAoNO8KdYPDTOWsaCnAG2L9Dz6XqspC7" }
   ];
-
-  const LAST_UPDATED = "08/07/2026";
 
   const foldersContainer = document.getElementById('folders-container');
   const empty = document.getElementById('empty');
   const searchInput = document.getElementById('search');
   const countLabel = document.getElementById('count-label');
   const filtersEl = document.getElementById('filters');
-  document.getElementById('updated').textContent = LAST_UPDATED;
+  
+  // Modal Elements
+  const modalOverlay = document.getElementById('video-modal');
+  const videoFrame = document.getElementById('video-frame');
+  const closeModalBtn = document.getElementById('close-modal');
 
   let activeCategory = 'todos';
 
-  function formatDate(iso){
-    const [y, m, d] = iso.split('-');
-    return `${d}/${m}/${y}`;
-  }
+  const formatDate = (iso) => { const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; };
 
-  function isSameOrigin(url){
-    try{
-      const u = new URL(url, location.href);
-      return u.origin === location.origin;
-    }catch(e){ return false; }
-  }
+  const getDrivePreviewUrl = (url) => {
+    const match = url.match(/id=([a-zA-Z0-9_-]+)/);
+    return match ? `https://drive.google.com/file/d/${match[1]}/preview` : null;
+  };
 
-  function downloadFile(url, filename, button){
-    const originalText = button.innerHTML;
-    button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> Procesando...';
-    
-    fetch(url).then(res => {
-      if(!res.ok) throw new Error('Respuesta no válida');
-      return res.blob();
-    }).then(blob => {
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = filename || '';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(blobUrl);
-      button.innerHTML = originalText;
-    }).catch(err => {
-      button.innerHTML = originalText;
-      alert('Error al descargar: ' + err.message);
-    });
-  }
+  const openPlayer = (driveUrl) => {
+    const previewUrl = getDrivePreviewUrl(driveUrl);
+    if(previewUrl) {
+      videoFrame.src = previewUrl;
+      modalOverlay.classList.add('active');
+    } else {
+      alert("Error: No se pudo cargar el reproductor.");
+    }
+  };
+
+  const closePlayer = () => {
+    modalOverlay.classList.remove('active');
+    setTimeout(() => { videoFrame.src = ""; }, 400); 
+  };
+
+  closeModalBtn.addEventListener('click', closePlayer);
+  modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) closePlayer(); });
 
   function render(){
     const q = searchInput.value.trim().toLowerCase();
     
-    // 1. Filtramos los archivos por búsqueda y categoría
     const filtered = FILES.filter(f => {
       const matchesQuery = f.name.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q);
       const matchesCat = activeCategory === 'todos' || f.category === activeCategory;
       return matchesQuery && matchesCat;
     });
 
-    countLabel.textContent = `${filtered.length} archivo${filtered.length === 1 ? '' : 's'} indexado${filtered.length === 1 ? '' : 's'}`;
+    countLabel.innerHTML = `<span style="color:var(--primary)">${filtered.length}</span> VIDEOS ENCONTRADOS`;
     empty.hidden = filtered.length !== 0;
     foldersContainer.innerHTML = '';
 
-    // 2. Agrupamos los archivos filtrados por su propiedad 'folder'
     const groupedFiles = {};
     filtered.forEach(f => {
-      const folderName = f.folder || 'Archivos sin clasificar';
+      const folderName = f.folder || 'Nuevos Lanzamientos';
       if (!groupedFiles[folderName]) groupedFiles[folderName] = [];
       groupedFiles[folderName].push(f);
     });
 
-    // 3. Renderizamos las carpetas y su contenido
     for (const [folderName, filesInFolder] of Object.entries(groupedFiles)) {
-      
-      const folderEl = document.createElement('div');
-      // Si hay una búsqueda activa, o si solo hay 1 carpeta, la abrimos por defecto. 
-      // De lo contrario la dejamos cerrada.
       const isOpen = q.length > 0 ? ' open' : '';
+      const folderEl = document.createElement('div');
       folderEl.className = `folder${isOpen}`;
 
-      // Crear el encabezado de la carpeta
       const headerEl = document.createElement('div');
       headerEl.className = 'folder-header';
       headerEl.innerHTML = `
         <div class="folder-title-group">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
           <span class="folder-title">${folderName}</span>
         </div>
         <div class="folder-meta">
-          <span>${filesInFolder.length} archivo${filesInFolder.length === 1 ? '' : 's'}</span>
-          <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          <span>${filesInFolder.length} Videos</span>
+          <svg class="chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
       `;
+      headerEl.addEventListener('click', () => folderEl.classList.toggle('open'));
 
-      // Lógica para abrir/cerrar carpeta al hacer clic
-      headerEl.addEventListener('click', () => {
-        folderEl.classList.toggle('open');
-      });
-
-      // Crear el contenedor animado del acordeón
       const contentWrapper = document.createElement('div');
       contentWrapper.className = 'folder-content-wrapper';
-      
       const contentInner = document.createElement('div');
       contentInner.className = 'folder-content-inner';
-
-      // Crear el Grid real donde van las tarjetas
       const gridEl = document.createElement('div');
       gridEl.className = 'grid';
 
-      // Rellenar la carpeta con sus archivos correspondientes
-      filesInFolder.forEach((f, index) => {
+      filesInFolder.forEach(f => {
         const card = document.createElement('div');
         card.className = 'card';
-        const stampClass = f.category === 'doc' ? 'stamp doc' : 'stamp';
-        const stampLabel = f.category === 'doc' ? 'DOCUMENTO' : 'VIDEO';
-        const sameOrigin = isSameOrigin(f.url);
-        const previewHtml = (f.category === 'video' && sameOrigin) ? `<div class="preview"><video class="thumb" src="${f.url}" preload="metadata" muted playsinline></video></div>` : '';
         
         card.innerHTML = `
-          <span class="${stampClass}" style="transform: rotate(${index % 2 === 0 ? 12 : -8}deg);">${stampLabel}</span>
-          <h2>${f.name}</h2>
+          <div class="stamp-container">
+            <span class="stamp hd">HD</span>
+            <span class="stamp adult">18+</span>
+          </div>
+          <h2 onclick="openPlayer('${f.url}')">${f.name}</h2>
           <div class="meta">
-            <span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>${f.size}</span>
-            <span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${formatDate(f.date)}</span>
+            <span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> ${f.size}</span>
+            <span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> ${formatDate(f.date)}</span>
           </div>
           <p class="desc">${f.desc}</p>
-          ${previewHtml}
-          <a class="btn-download" href="${f.url}" ${sameOrigin ? 'download' : 'target="_blank" rel="noopener"'}>
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            DESCARGAR
-          </a>
+          <div class="card-actions">
+            ${f.category === 'video' ? `<button class="btn btn-play" onclick="openPlayer('${f.url}')"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> REPRODUCIR</button>` : ''}
+            <a class="btn btn-down" href="${f.url}" target="_blank" rel="noopener">DESCARGAR</a>
+          </div>
         `;
-        
-        const btn = card.querySelector('.btn-download');
-        if(btn && f.category === 'video' && sameOrigin){
-          btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            downloadFile(f.url, f.name, btn);
-          });
-          const vid = card.querySelector('.thumb');
-          if(vid){
-            vid.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
-            vid.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
-          }
-        }
         gridEl.appendChild(card);
       });
 
-      // Ensamblar todo
       contentInner.appendChild(gridEl);
       contentWrapper.appendChild(contentInner);
       folderEl.appendChild(headerEl);
@@ -530,7 +510,7 @@
 
   function buildFilters(){
     const cats = ['todos', ...new Set(FILES.map(f => f.category))];
-    const labels = { todos: 'Todo el archivo', video: 'Archivos de Video', doc: 'Documentos' };
+    const labels = { todos: 'ÚLTIMOS VIDEOS', video: 'REPOSITORIO HD' };
     filtersEl.innerHTML = '';
     cats.forEach(cat => {
       const btn = document.createElement('button');
@@ -550,6 +530,5 @@
   buildFilters();
   render();
 </script>
-
 </body>
 </html>
